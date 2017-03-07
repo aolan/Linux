@@ -1,5 +1,4 @@
-# gettimeofday 获取当前时间
-
+# gettimeofday 获取当前时间，可以精确到微秒，但是可能会出现时间跳变
 ```c
 #include <sys/time.h>
 
@@ -39,4 +38,7 @@ int main()
     
     return 0;
 }
+
 ```
+
+# time 获取当前时间，可以精确到微秒，但是可能会出现时间跳变
