@@ -19,7 +19,7 @@ struct timeval{
 struct timezone{
   int tz_minuteswest; 
   int tz_dsttime;
-}
+};
 
 ```
 
@@ -47,3 +47,26 @@ int main()
 # time 
 
 获取当前时间，可以精确到微秒，但是可能会出现时间跳变
+
+# clock_gettime
+
+获取当前时间，精确到纳秒
+
+```c
+
+/*
+* clockid_t时钟类型:
+* CLOCK_REALTIME:标准POSIX实时时钟
+* CLOCK_MONOTONIC: POSIX时钟,以恒定速率运行;不会复位和调整,它的取值和CLOCK_REALTIME是一样的.
+* CLOCK_PROCESS_CPUTIME_ID和CLOCK_THREAD_CPUTIME_ID是CPU中的硬件计时器中实现的.
+*/
+int clock_gettime(clockid_t __clock_id, struct timespec *__tp);
+
+struct timespec{
+   time_t tv_sec; // 秒
+   long tv_nsec;  // 纳秒
+};
+
+
+
+```
