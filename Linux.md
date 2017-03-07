@@ -56,9 +56,10 @@ int main()
 
 /*
 * clockid_t时钟类型:
-* CLOCK_REALTIME:标准POSIX实时时钟
+* CLOCK_REALTIME: 标准POSIX实时时钟.
 * CLOCK_MONOTONIC: POSIX时钟,以恒定速率运行;不会复位和调整,它的取值和CLOCK_REALTIME是一样的.
-* CLOCK_PROCESS_CPUTIME_ID和CLOCK_THREAD_CPUTIME_ID是CPU中的硬件计时器中实现的.
+* CLOCK_PROCESS_CPUTIME_ID: 本进程到当前代码系统CPU花费的时间.
+* CLOCK_THREAD_CPUTIME_ID: 本线程到当前代码系统CPU花费的时间.
 */
 int clock_gettime(clockid_t __clock_id, struct timespec *__tp);
 
