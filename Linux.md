@@ -56,8 +56,8 @@ int main()
 
 /*
 * clockid_t时钟类型:
-* CLOCK_REALTIME: 标准POSIX实时时钟.
-* CLOCK_MONOTONIC: POSIX时钟,以恒定速率运行;不会复位和调整,它的取值和CLOCK_REALTIME是一样的.
+* CLOCK_REALTIME: 系统实时时间,随系统实时时间改变而改变,即从UTC1970-1-1 0:0:0开始计时, 中间时刻如果系统时间被用户改成其他,则对应的时间相应改变.
+* CLOCK_MONOTONIC: 从系统启动这一刻起开始计时,不受系统时间被用户改变的影响.
 * CLOCK_PROCESS_CPUTIME_ID: 本进程到当前代码系统CPU花费的时间.
 * CLOCK_THREAD_CPUTIME_ID: 本线程到当前代码系统CPU花费的时间.
 */
