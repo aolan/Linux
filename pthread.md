@@ -25,18 +25,26 @@ int pthread_create(pthread_t *restrict tidp,
                     void *restrict arg);
                     
 /*
-* 线程通过调用pthread_exit函数终止执行，就如同进程在结束时调用exit函数一样。
-* 这个函数的作用是，终止调用它的线程并返回一个指向某个对象的指针。
+* 线程通过调用pthread_exit函数终止执行，就如同进程在结束时调用exit函数一样
+* 这个函数的作用是，终止调用它的线程并返回一个指向某个对象的指针
 * 这个对象不能是在当前线程中的stack中创建的
 */               
 void pthread_exit(void *rval_ptr);
 
 /*
-* pthread_join()函数，以阻塞的方式等待thread指定的线程结束。
-* 当函数返回时，被等待线程的资源被收回。
+* pthread_join()函数，以阻塞的方式等待thread指定的线程结束
+* 当函数返回时，被等待线程的资源被收回
 * 如果线程已经结束，那么该函数会立即返回。并且thread指定的线程必须是joinable的
 **/
 int pthread_join(pthread_t thread, void **rval_ptr);
+
+/*
+* 该函数会使指定线程如同调用了pthread_exit(PTHREAD_CANCELLED)
+* 不过，指定线程可以选择忽略或者进行自己的处理
+* 该函数不会导致Block，只是发送Cancel这个请求
+*/
+void pthread_cancel(pthread_t tid);
+
 
 ```
 
