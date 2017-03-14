@@ -24,9 +24,18 @@ int pthread_create(pthread_t *restrict tidp,
                     void *(*start_rtn)(void *), 
                     void *restrict arg);
                     
-                    
+/*
+* 线程通过调用pthread_exit函数终止执行，就如同进程在结束时调用exit函数一样。
+* 这个函数的作用是，终止调用它的线程并返回一个指向某个对象的指针。
+* 这个对象不能是在当前线程中的stack中创建的
+*/               
 void pthread_exit(void *rval_ptr);
 
+/*
+* pthread_join()函数，以阻塞的方式等待thread指定的线程结束。
+* 当函数返回时，被等待线程的资源被收回。
+* 如果线程已经结束，那么该函数会立即返回。并且thread指定的线程必须是joinable的
+**/
 int pthread_join(pthread_t thread, void **rval_ptr);
 
 ```
@@ -43,7 +52,7 @@ int pthread_join(pthread_t thread, void **rval_ptr);
 3. 线程调用pthread_exit函数
 
 
-# pthread_exit、pthread_join
+# pthread_exit和pthread_join组合使用
 
 1. 线程A调用pthread_join(B, &rval_ptr)，被阻塞，进入Detached状态（如果已经进入Detached状态，则pthread_join函数返回EINVAL）。如果对B的结束代码不感兴趣，rval_ptr可以传NULL。
 
