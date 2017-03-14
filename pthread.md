@@ -23,6 +23,12 @@ int pthread_create(pthread_t *restrict tidp,
                     const pthread_attr_t *restrict attr, 
                     void *(*start_rtn)(void *), 
                     void *restrict arg);
+                    
+                    
+void pthread_exit(void *rval_ptr);
+
+int pthread_join(pthread_t thread, void **rval_ptr);
+
 ```
 
 
@@ -35,3 +41,12 @@ int pthread_create(pthread_t *restrict tidp,
 2. 被同一进程中的另外的线程Cancel掉
 
 3. 线程调用pthread_exit函数
+
+
+# pthread_exit、pthread_join
+
+1. 线程A调用pthread_join(B, &rval_ptr)，被阻塞，进入Detached状态（如果已经进入Detached状态，则pthread_join函数返回EINVAL）。如果对B的结束代码不感兴趣，rval_ptr可以传NULL。
+
+2. 线程B调用pthread_exit(rval_ptr)，退出线程B，结束代码为rval_ptr。注意rval_ptr指向的内存的生命周期，不应该指向B的Stack中的数据。
+
+3. 线程A恢复运行，pthread_join函数调用结束，线程B的结束代码被保存到rval_ptr参数中去。如果线程B被Cancel，那么rval_ptr的值就是PTHREAD_CANCELLED。
