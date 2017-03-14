@@ -105,17 +105,22 @@ void *thread_func(void *arg)
 必须要注意的是，如果线程处于PTHREAD_CANCEL_ASYNCHRONOUS状态，上述代码段就有可能出错，因为CANCEL事件有可能在pthread_cleanup_push()和pthread_mutex_lock()之间发生，或者在pthread_mutex_unlock()和pthread_cleanup_pop()之间发生，从而导致清理函数unlock一个并没有加锁的mutex变量，造成错误。因此，在使用清理函数的时候，都应该暂时设置成PTHREAD_CANCEL_DEFERRED模式。为此，POSIX的Linux实现中还提供了一对不保证可移植的pthread_cleanup_push_defer_np()/pthread_cleanup_pop_defer_np()扩展函数，功能与以下
 
 代码段相当：
+
 ```c
 void *thread_func(void *arg)
 { 
  int oldtype;
  pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &oldtype);
  pthread_cleanup_push(routine, arg);
+ 
+ pthread_mutex_lock(&mut);
  // do something
+ pthread_mutex_unlock(&mut);
 
  pthread_cleanup_pop(execute);
  pthread_setcanceltype(oldtype, NULL);
 }
 ```
 
+本来do something之后是有pthread_mutex_unlock(&mut)这句，也就是有解锁操作，但是在do something时会出现非正常终止，那样的话，系统会根据pthread_cleanup_push中提供的函数和参数进行解锁操作或者其他操作，以免造成死锁。
 
