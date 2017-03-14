@@ -109,16 +109,16 @@ void *thread_func(void *arg)
 ```c
 void *thread_func(void *arg)
 { 
- int oldtype;
- pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &oldtype);
- pthread_cleanup_push(routine, arg);
+    int oldtype;
+    pthread_setcanceltype(PTHREAD_CANCEL_DEFERRED, &oldtype);
+    pthread_cleanup_push(routine, arg);
  
- pthread_mutex_lock(&mut);
- // do something
- pthread_mutex_unlock(&mut);
+    pthread_mutex_lock(&mut);
+    // do something
+    pthread_mutex_unlock(&mut);
 
- pthread_cleanup_pop(execute);
- pthread_setcanceltype(oldtype, NULL);
+    pthread_cleanup_pop(execute);
+    pthread_setcanceltype(oldtype, NULL);
 }
 ```
 
