@@ -73,11 +73,15 @@ struct timespec{
 
 1.CLOCK_REALTIME:
 
-代表机器上可以理解为当前的我们所常看的时间，其当time-of-day 被修改的时候而改变，这包括NTP对它的修改（NTP:Network Time Protocol（NTP）是用来使计算机时间同步化的一种协议，它可以使计算机对其服务器或时钟源（如石英钟，GPS等等)做同步化，它可以提供高精准度的时间校正（LAN上与标准间差小于1毫秒，WAN上几十毫秒），且可介由加密确认的方式来防止恶毒的协议攻击。）
+代表机器上可以理解为当前的我们所常看的时间，其当time-of-day 被修改的时候而改变，这包括NTP对它的修改（NTP:Network Time Protocol（NTP）是用来使计算机时间同步化的一种协议，它可以使计算机对其服务器或时钟源（如石英钟，GPS等等)做同步化，它可以提供高精准度的时间校正（LAN上与标准间差小于1毫秒，WAN上几十毫秒），且可介由加密确认的方式来防止恶毒的协议攻击。）系统实时时间，从Epoch计时，可以被用户更改以及adjtime和NTP影响。
 
-2.CLOCK_MONOTONIC:
+2.CLOCK_REALTIME_COARSE:
 
-代表从过去某个固定的时间点开始的绝对的逝去时间，它不受任何系统time-of-day时钟修改的影响，如果你想计算出在一台计算机上不受重启的影响，两个事件发生的间隔时间的话，那么它将是最好的选择。
+系统实时时间，比起CLOCK_REALTIME有更快的获取速度，更低一些的精确度。
+
+3.CLOCK_MONOTONIC:
+
+代表从过去某个固定的时间点开始的绝对的逝去时间，它不受任何系统time-of-day时钟修改的影响，如果你想计算出在一台计算机上不受重启的影响，两个事件发生的间隔时间的话，那么它将是最好的选择。 从系统启动这一刻开始计时，即使系统时间被用户改变，也不受影响。系统休眠时不会计时。受adjtime和NTP影响。
 
 eg:
 
@@ -116,3 +120,22 @@ eg:
  }
 
 ```
+
+4.CLOCK_MONOTONIC_COARSE: 
+
+如同CLOCK_MONOTONIC，但有更快的获取速度和更低一些的精确度。受NTP影响。
+
+5.CLOCK_MONOTONIC_RAW: 
+
+与CLOCK_MONOTONIC一样，系统开启时计时，但不受NTP影响，受adjtime影响。
+
+6.CLOCK_BOOTTIME: 
+
+从系统启动这一刻开始计时，包括休眠时间，受到settimeofday的影响。
+
+7.CLOCK_PROCESS_CPUTIME_ID: 
+
+本进程开始到此刻调用的时间。
+
+
+
