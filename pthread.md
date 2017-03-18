@@ -125,3 +125,5 @@ void *thread_func(void *arg)
 本来do something之后是有pthread_mutex_unlock(&mut)这句，也就是有解锁操作，但是在do something时会出现非正常终止，那样的话，系统会根据pthread_cleanup_push中提供的函数和参数进行解锁操作或者其他操作，以免造成死锁。
 
 注意：在线程宿主函数中主动调用return，如果return语句包含在pthread_cleanup_push()/pthread_cleanup_pop()对中，则不会引起清理函数的执行，反而会导致segment fault。
+
+更多资源: http://www.cnblogs.com/mywolrd/archive/2009/02/05/1930707.html
