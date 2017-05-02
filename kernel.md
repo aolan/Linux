@@ -65,7 +65,51 @@
 * 完成上述操作之后，系统各部分已经处于可运行状态，此后程序把自己“手工”移动到进程0中运行，并使用fork调用首次创建出进程1。
 * 在进程1中，程序将继续进行应用环境的初始化并执行shell登录程序。而原进程0则会在系统空闲时被调度执行，此时进程0仅执行pause()系统调用，并又会调用调度函数。
 
+```c
 
+void main(void)		
+{			
+ 	ROOT_DEV = ORIG_ROOT_DEV;
+ 	drive_info = DRIVE_INFO;
+	memory_end = (1<<20) + (EXT_MEM_K<<10);
+	memory_end &= 0xfffff000;
+	if (memory_end > 16*1024*1024)
+		memory_end = 16*1024*1024;
+	if (memory_end > 12*1024*1024) 
+		buffer_memory_end = 4*1024*1024;
+	else if (memory_end > 6*1024*1024)
+		buffer_memory_end = 2*1024*1024;
+	else
+		buffer_memory_end = 1*1024*1024;
+	main_memory_start = buffer_memory_end;
+#ifdef RAMDISK
+	main_memory_start += rd_init(main_memory_start, RAMDISK*1024);
+#endif
+	mem_init(main_memory_start,memory_end); /* 内存管理初始化 */
+	trap_init();  /* 硬件中断向量初始化 */
+	blk_dev_init(); /* 块设备初始化 */
+	chr_dev_init(); /* 字符设备初始化 */
+	tty_init(); /* tty 初始化 */
+	time_init();  /* 设置开机启动时间 */
+	sched_init(); /* 调度程序初始化 */
+	buffer_init(buffer_memory_end); /* 缓冲管理初始化，建内存链表等 */
+	hd_init();  /* 硬盘初始化* /
+	floppy_init(); /* 软驱初始化 */
+	sti();  /* 所有初始化工作都做完了，开启中断 */
+	move_to_user_mode(); /* 移到用户模式 */
+	if (!fork()) {		
+		init();
+	}
+/*
+ *   NOTE!!   For any other task 'pause()' would mean we have to get a
+ * signal to awaken, but task0 is the sole exception (see 'schedule()')
+ * as task 0 gets activated at every idle moment (when no other tasks
+ * can run). For task0 'pause()' just means we go check if some other
+ * task can run, and if not we return here.
+ */
+	for(;;) pause();
+}
+```
 
 
 
